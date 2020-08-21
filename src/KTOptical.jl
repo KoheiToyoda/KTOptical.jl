@@ -8,24 +8,31 @@ module KTOptical
 
     # ラゲール倍多項式
     @with_kw struct struct_beamparam
-        ω::Float32
-        z::Float32
-        λ::Float32
-        k::Float32
-        zr::Float32
-        ωz::Float32
-        Rz::Float32
+        ω::Float64
+        z::Float64
+        λ::Float64
+        k::Float64
+        zr::Float64
+        ωz::Float64
+        Rz::Float64
     end
 
+    export LG_E
+    export LG_I
+    export HG_E
+    export HG_I
+
     function setParam(ω_,z_,λ_)
-        bp = struct_beamparam(
-        ω = ω_,
-        z = z_,
-        λ = λ_,
-        k = 2π / λ,
-        zr = k * ω^2 / 2,
-        ωz = ω * √(1 + (z^2 / zr^2)),
-        Rz = k * ω^2 / 2 )
+        # 計算結果を使ってパラメータセットするときは、
+        # 引数内の宣言内のスコープが引き継がれない。
+        # よってω、ｚ、λを使った計算はk,zr,wz,rzに入れられない。
+        # ω_、ｚ_、λ_を使う必要がある。
+        k = 2π / λ_
+        zr = k * ω_^2 / 2
+        ωz = ω_ * √(1 + (z_^2 / zr^2))
+        Rz = k * ω_^2 / 2
+
+        global bp = struct_beamparam(ω_,z_,λ_,k,zr,ωz,Rz)
     end
 
     function __Llp__(l,p,u)
@@ -74,7 +81,7 @@ module KTOptical
 
     function HG_E(m,n,x,y)
         E = __Hn__(n, √2 * y / bp.ω) *
-        Hn(m, √2 * x / bp.ω) *
+        __Hn__(m, √2 * x / bp.ω) *
         exp(-(x^2 + y^2) / bp.ω^2) *
         exp(-1im * (1 + m + n) * atan(bp.z / bp.zr)) *
         exp(-1im * bp.k * (x^2 + y^2) / (2bp.Rz))
