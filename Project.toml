@@ -1,0 +1,13 @@
+name = "KTOptical"
+uuid = "ed197631-8daa-418e-b8e5-9a22867085b7"
+authors = ["Kohei Toyoda <toyoda@chiba-u.jp>"]
+version = "0.1.0"
+
+[compat]
+julia = "1.5"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]
