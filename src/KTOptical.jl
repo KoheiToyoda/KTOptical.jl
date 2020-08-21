@@ -64,7 +64,7 @@ module KTOptical
         return abs(LG_E(l,p,x,y))^2
     end
 
-# l,p: HG のモードパラメータ
+# m,n: HG のモードパラメータ
 # x,y: 座標(使用する際はブロードキャストする)
 
 # ラゲール倍多項式
