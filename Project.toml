@@ -3,6 +3,9 @@ uuid = "ed197631-8daa-418e-b8e5-9a22867085b7"
 authors = ["Kohei Toyoda <toyoda@chiba-u.jp>"]
 version = "0.1.0"
 
+[deps]
+Parameters = "d96e819e-fc66-5662-9728-84c9c7592b0a"
+
 [compat]
 julia = "1.5"
 

@@ -16,7 +16,6 @@ module KTOptical
         ωz::Float32
         Rz::Float32
     end
-    bp = struct_beamparam()
 
     function setParam(ω_,z_,λ_)
         bp = struct_beamparam(
