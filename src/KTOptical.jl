@@ -60,7 +60,6 @@ module KTOptical
 
 # l,p: HG のモードパラメータ
 # x,y: 座標(使用する際はブロードキャストする)
-# ω,λ: モードフィールド径、波長
 
 # ラゲール倍多項式
     function __Hn__(n,u)
@@ -83,8 +82,8 @@ module KTOptical
         return E
     end
 
-    function HG_I(l,p,x,y)
-        return abs(HG_E(l,p,x,y))^2
+    function HG_I(m,n,x,y)
+        return abs(HG_E(m,n,x,y))^2
     end
 
 end
