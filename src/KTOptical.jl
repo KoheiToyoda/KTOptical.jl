@@ -60,6 +60,20 @@ module KTOptical
         return E
     end
 
+    function LG_E(l,p,x)
+        R = √(x^2)
+        Θ = atan(0)
+        E = @. √(2 * factorial(p) / (π * factorial(p + abs(l)))) *
+            (√2R / bp.ω)^abs(l) *
+            __Llp__(l, p, 2 * R^2 / bp.ω^2) *
+            (bp.ω / bp.ωz) *
+            exp(-R^2 / bp.ω^2) *
+            exp(1im * l * Θ) *
+            exp(-1im * (1 + 2p + abs(l)) * atan(bp.z / bp.zr)) *
+            exp(-1im * bp.k * R^2 / (2bp.Rz))
+        return E
+    end
+
     function LG_I(l,p,x,y)
         return abs(LG_E(l,p,x,y))^2
     end
@@ -88,8 +102,20 @@ module KTOptical
         return E
     end
 
+    function HG_E(m,n,x)
+        E = __Hn__(m, √2 * x / bp.ω) *
+        exp(-(x^2) / bp.ω^2) *
+        exp(-1im * (1 + m + n) * atan(bp.z / bp.zr)) *
+        exp(-1im * bp.k * (x^2) / (2bp.Rz))
+        return E
+    end
+
     function HG_I(m,n,x,y)
         return abs(HG_E(m,n,x,y))^2
+    end
+
+    function HG_I(m,n,x)
+        return abs(HG_E(m,n,x))^2
     end
 
 end
