@@ -21,7 +21,19 @@ module KTOptical
     export LG_I
     export HG_E
     export HG_I
-
+    export gauss_mode
+    export vortex_mode
+    struct gauss_mode
+        m::Int8
+        n::Int8
+    end
+    struct vortex_mode
+        # userはl,pで代入するが、
+        # m,nのフィールドも持っておき、コードライティング中では、m,nでやらせる。
+        l::Int8
+        p::Int8
+    end
+    
     function setParam(ω_,z_,λ_)
         # 計算結果を使ってパラメータセットするときは、
         # 引数内の宣言内のスコープが引き継がれない。
@@ -77,11 +89,16 @@ module KTOptical
     function LG_I(l,p,x,y)
         return abs(LG_E(l,p,x,y))^2
     end
+    
+    function LG_I(l,p,x)
+        return abs(HG_E(l,p,x))^2
+    end
+
 
 # m,n: HG のモードパラメータ
 # x,y: 座標(使用する際はブロードキャストする)
 
-# ラゲール倍多項式
+# エルミート倍多項式
     function __Hn__(n,u)
         function Hn_setinit(n,u,m)
             if m > floor(n/2) #再起関数の終了条件
@@ -110,12 +127,91 @@ module KTOptical
         return E
     end
 
+    
     function HG_I(m,n,x,y)
         return abs(HG_E(m,n,x,y))^2
     end
 
     function HG_I(m,n,x)
         return abs(HG_E(m,n,x))^2
+    end
+
+    
+    function E(mode::vortex_mode ,x,y)
+        l = mode.l
+        p = mode.p
+        R = √(x^2 + y^2)
+        Θ = atan(y/x)
+        E = @. √(2 * factorial(p) / (π * factorial(p + abs(l)))) *
+            (√2R / bp.ω)^abs(l) *
+            __Llp__(l, p, 2 * R^2 / bp.ω^2) *
+            (bp.ω / bp.ωz) *
+            exp(-R^2 / bp.ω^2) *
+            exp(1im * l * Θ) *
+            exp(-1im * (1 + 2p + abs(l)) * atan(bp.z / bp.zr)) *
+            exp(-1im * bp.k * R^2 / (2bp.Rz))
+        return E
+    end
+    
+    function E(mode::vortex_mode ,x)
+        l = mode.l
+        p = mode.p
+        R = √(x^2)
+        Θ = atan(0)
+        E = @. √(2 * factorial(p) / (π * factorial(p + abs(l)))) *
+            (√2R / bp.ω)^abs(l) *
+            __Llp__(l, p, 2 * R^2 / bp.ω^2) *
+            (bp.ω / bp.ωz) *
+            exp(-R^2 / bp.ω^2) *
+            exp(1im * l * Θ) *
+            exp(-1im * (1 + 2p + abs(l)) * atan(bp.z / bp.zr)) *
+            exp(-1im * bp.k * R^2 / (2bp.Rz))
+        return E
+    end
+
+    function E(mode::gauss_mode,x,y)
+        m = mode.m
+        n = mode.n
+        E = __Hn__(n, √2 * y / bp.ω) *
+        __Hn__(m, √2 * x / bp.ω) *
+        exp(-(x^2 + y^2) / bp.ω^2) *
+        exp(-1im * (1 + m + n) * atan(bp.z / bp.zr)) *
+        exp(-1im * bp.k * (x^2 + y^2) / (2bp.Rz))
+        return E
+    end
+
+    function E(mode::gauss_mode,x)
+        m = mode.m
+        n = mode.n
+        E = __Hn__(m, √2 * x / bp.ω) *
+        exp(-(x^2) / bp.ω^2) *
+        exp(-1im * (1 + m + n) * atan(bp.z / bp.zr)) *
+        exp(-1im * bp.k * (x^2) / (2bp.Rz))
+        return E
+    end
+
+    function I(mode::vortex_mode,x)
+        l = mode.l
+        p = mode.p
+        return abs(HG_E(l,p,x))^2
+    end
+
+    function I(mode::vortex_mode,x,y)
+        l = mode.l
+        p = mode.p
+        return abs(LG_E(l,p,x,y))^2
+    end
+
+    function I(mode::gauss_mode,x)
+        m = mode.m
+        n = mode.n
+        return abs(HG_E(m,n,x))^2
+    end
+
+    function I(mode::gauss_mode,x,y)
+        m = mode.m
+        n = mode.n
+        return abs(HG_E(m,n,x,y))^2
     end
 
 end
