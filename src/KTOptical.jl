@@ -17,6 +17,13 @@ module KTOptical
         Rz::Float64
     end
 
+    struct power
+        W
+    end
+    struct energy
+        J
+    end
+
     export LG_E
     export LG_I
     export HG_E
@@ -213,6 +220,14 @@ module KTOptical
         n = mode.n
         return abs(HG_E(m,n,x,y))^2
     end
+
+    function set_I!(I,I0::power)
+        total_input_I = sum(I)
+        ratio = total_input_I / I0
+        return ratio .* I
+    end
+
+    
 
 end
 
