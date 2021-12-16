@@ -227,7 +227,7 @@ module KTOptical
     function set_I!(I,I0,step_t)
         total_input_I = sum(I)
         ratio = total_input_I / (I0*step_t)
-        return ratio .* I
+        return ratio .* I , ratio
     end
 
 
