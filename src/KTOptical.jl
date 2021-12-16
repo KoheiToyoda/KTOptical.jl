@@ -224,7 +224,7 @@ module KTOptical
     Iはマトリックス、I0は全体の総合パワー(W)
 
     """
-    function set_I!(I,I0,step_t)
+    function set_I(I::Matrix{Any},I0,step_t)
         total_input_I = sum(I)
         ratio = total_input_I / (I0*step_t)
         return ratio .* I , ratio
