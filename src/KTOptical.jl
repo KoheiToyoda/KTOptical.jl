@@ -122,6 +122,7 @@ module KTOptical
     function HG_E(m,n,x,y)
         E = __Hn__(n, √2 * y / bp.ωz) *
         __Hn__(m, √2 * x / bp.ωz) *
+        bp.ω / bp.ωz *
         exp(-(x^2 + y^2) / bp.ωz^2) *
         exp(-1im * (1 + m + n) * atan(bp.z , bp.zr)) *
         exp(-1im * bp.k * (x^2 + y^2) / (2bp.Rz))
@@ -131,6 +132,7 @@ module KTOptical
     function HG_E(m,n,x)
         E = __Hn__(m, √2 * x / bp.ωz) *
         exp(-(x^2) / bp.ωz^2) *
+        bp.ω / bp.ωz * 
         exp(-1im * (1 + m + n) * atan(bp.z , bp.zr)) *
         exp(-1im * bp.k * (x^2) / (2bp.Rz))
         return E
