@@ -51,7 +51,7 @@ module KTOptical
         k = 2π / λ_
         zr = k * ω_^2 / 2
         ωz = ω_ * √(1 + (z_^2 / zr^2))
-        Rz = -z_*(1+(π*ω_^2/(λ_*z_))^2 )
+        Rz = -z_*(1+(zr/z_)^2)
 
         global bp = struct_beamparam(ω_,z_,λ_,k,zr,ωz,Rz)
     end
@@ -71,10 +71,10 @@ module KTOptical
         R = √(x^2 + y^2)
         Θ = atan(y/x)
         E = @. √(2 * factorial(p) / (π * factorial(p + abs(l)))) *
-            (√2R / bp.ω)^abs(l) *
-            __Llp__(l, p, 2 * R^2 / bp.ω^2) *
+            (√2R / bp.ωz)^abs(l) *
+            __Llp__(l, p, 2 * R^2 / bp.ωz^2) *
             (bp.ω / bp.ωz) *
-            exp(-R^2 / bp.ω^2) *
+            exp(-R^2 / bp.ωz^2) *
             exp(1im * l * Θ) *
             exp(-1im * (1 + 2p + abs(l)) * atan(bp.z / bp.zr)) *
             exp(-1im * bp.k * R^2 / (2bp.Rz))
@@ -85,10 +85,10 @@ module KTOptical
         R = √(x^2)
         Θ = atan(0)
         E = @. √(2 * factorial(p) / (π * factorial(p + abs(l)))) *
-            (√2R / bp.ω)^abs(l) *
-            __Llp__(l, p, 2 * R^2 / bp.ω^2) *
+            (√2R / bp.ωz)^abs(l) *
+            __Llp__(l, p, 2 * R^2 / bp.ωz^2) *
             (bp.ω / bp.ωz) *
-            exp(-R^2 / bp.ω^2) *
+            exp(-R^2 / bp.ωz^2) *
             exp(1im * l * Θ) *
             exp(-1im * (1 + 2p + abs(l)) * atan(bp.z / bp.zr)) *
             exp(-1im * bp.k * R^2 / (2bp.Rz))
@@ -120,17 +120,17 @@ module KTOptical
     end
 
     function HG_E(m,n,x,y)
-        E = __Hn__(n, √2 * y / bp.ω) *
-        __Hn__(m, √2 * x / bp.ω) *
-        exp(-(x^2 + y^2) / bp.ω^2) *
+        E = __Hn__(n, √2 * y / bp.ωz) *
+        __Hn__(m, √2 * x / bp.ωz) *
+        exp(-(x^2 + y^2) / bp.ωz^2) *
         exp(-1im * (1 + m + n) * atan(bp.z / bp.zr)) *
         exp(-1im * bp.k * (x^2 + y^2) / (2bp.Rz))
         return E
     end
 
     function HG_E(m,n,x)
-        E = __Hn__(m, √2 * x / bp.ω) *
-        exp(-(x^2) / bp.ω^2) *
+        E = __Hn__(m, √2 * x / bp.ωz) *
+        exp(-(x^2) / bp.ωz^2) *
         exp(-1im * (1 + m + n) * atan(bp.z / bp.zr)) *
         exp(-1im * bp.k * (x^2) / (2bp.Rz))
         return E
@@ -149,54 +149,25 @@ module KTOptical
     function E(mode::vortex_mode ,x,y)
         l = mode.l
         p = mode.p
-        R = √(x^2 + y^2)
-        Θ = atan(y/x)
-        E = @. √(2 * factorial(p) / (π * factorial(p + abs(l)))) *
-            (√2R / bp.ω)^abs(l) *
-            __Llp__(l, p, 2 * R^2 / bp.ω^2) *
-            (bp.ω / bp.ωz) *
-            exp(-R^2 / bp.ω^2) *
-            exp(1im * l * Θ) *
-            exp(-1im * (1 + 2p + abs(l)) * atan(bp.z / bp.zr)) *
-            exp(-1im * bp.k * R^2 / (2bp.Rz))
-        return E
+        return LG_E(l,p,x,y)
     end
     
     function E(mode::vortex_mode ,x)
         l = mode.l
         p = mode.p
-        R = √(x^2)
-        Θ = atan(0)
-        E = @. √(2 * factorial(p) / (π * factorial(p + abs(l)))) *
-            (√2R / bp.ω)^abs(l) *
-            __Llp__(l, p, 2 * R^2 / bp.ω^2) *
-            (bp.ω / bp.ωz) *
-            exp(-R^2 / bp.ω^2) *
-            exp(1im * l * Θ) *
-            exp(-1im * (1 + 2p + abs(l)) * atan(bp.z / bp.zr)) *
-            exp(-1im * bp.k * R^2 / (2bp.Rz))
-        return E
+        return LG_E(l,p,x)
     end
 
     function E(mode::gauss_mode,x,y)
         m = mode.m
         n = mode.n
-        E = __Hn__(n, √2 * y / bp.ω) *
-        __Hn__(m, √2 * x / bp.ω) *
-        exp(-(x^2 + y^2) / bp.ω^2) *
-        exp(-1im * (1 + m + n) * atan(bp.z / bp.zr)) *
-        exp(-1im * bp.k * (x^2 + y^2) / (2bp.Rz))
-        return E
+        return HG_E(m,n,x,y)
     end
 
     function E(mode::gauss_mode,x)
         m = mode.m
         n = mode.n
-        E = __Hn__(m, √2 * x / bp.ω) *
-        exp(-(x^2) / bp.ω^2) *
-        exp(-1im * (1 + m + n) * atan(bp.z / bp.zr)) *
-        exp(-1im * bp.k * (x^2) / (2bp.Rz))
-        return E
+        return HG_E(m,n,x)
     end
 
     function I(mode::vortex_mode,x)
