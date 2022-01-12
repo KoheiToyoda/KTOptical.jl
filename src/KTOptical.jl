@@ -51,7 +51,7 @@ module KTOptical
         k = 2π / λ_
         zr = k * ω_^2 / 2
         ωz = ω_ * √(1 + (z_^2 / zr^2))
-        Rz = -z_*(1+(zr/z_)^2)
+        Rz = (z_^2+zr^2)/z_#-z_*(1+(zr/z_)^2)
 
         global bp = struct_beamparam(ω_,z_,λ_,k,zr,ωz,Rz)
     end
