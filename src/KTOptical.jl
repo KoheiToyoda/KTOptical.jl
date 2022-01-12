@@ -20,6 +20,7 @@ module KTOptical
     struct power
         W
     end
+
     struct energy
         J
     end
@@ -30,6 +31,7 @@ module KTOptical
     export HG_I
     export gauss_mode
     export vortex_mode
+
     struct gauss_mode
         m::Int8
         n::Int8
@@ -49,7 +51,7 @@ module KTOptical
         k = 2π / λ_
         zr = k * ω_^2 / 2
         ωz = ω_ * √(1 + (z_^2 / zr^2))
-        Rz = k * ω_^2 / 2
+        Rz = -z_*(1+(π*ω_^2/(λ_*z_))^2 )
 
         global bp = struct_beamparam(ω_,z_,λ_,k,zr,ωz,Rz)
     end
@@ -226,6 +228,5 @@ module KTOptical
         ratio = (I0*step_t)/total_input_I
         return ratio .* I , ratio
     end
-
 
 end
