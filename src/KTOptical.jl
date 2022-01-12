@@ -76,7 +76,7 @@ module KTOptical
             (bp.ω / bp.ωz) *
             exp(-R^2 / bp.ωz^2) *
             exp(1im * l * Θ) *
-            exp(-1im * (1 + 2p + abs(l)) * atan(bp.z , bp.zr)) *
+            exp(-1im * (1 + 2p + abs(l)) * atan(bp.zr , bp.z)) *
             exp(-1im * bp.k * R^2 / (2bp.Rz))
         return E
     end
@@ -90,7 +90,7 @@ module KTOptical
             (bp.ω / bp.ωz) *
             exp(-R^2 / bp.ωz^2) *
             exp(1im * l * Θ) *
-            exp(-1im * (1 + 2p + abs(l)) * atan(bp.z , bp.zr)) *
+            exp(-1im * (1 + 2p + abs(l)) * atan(bp.zr , bp.z)) *
             exp(-1im * bp.k * R^2 / (2bp.Rz))
         return E
     end
@@ -124,7 +124,7 @@ module KTOptical
         __Hn__(m, √2 * x / bp.ωz) *
         bp.ω / bp.ωz *
         exp(-(x^2 + y^2) / bp.ωz^2) *
-        exp(-1im * (1 + m + n) * atan(bp.z , bp.zr)) *
+        exp(-1im * (1 + m + n) * atan(bp.zr , bp.z)) *
         exp(-1im * bp.k * (x^2 + y^2) / (2bp.Rz))
         return E
     end
@@ -133,7 +133,7 @@ module KTOptical
         E = __Hn__(m, √2 * x / bp.ωz) *
         exp(-(x^2) / bp.ωz^2) *
         bp.ω / bp.ωz * 
-        exp(-1im * (1 + m + n) * atan(bp.z , bp.zr)) *
+        exp(-1im * (1 + m + n) * atan(bp.zr , bp.z)) *
         exp(-1im * bp.k * (x^2) / (2bp.Rz))
         return E
     end
