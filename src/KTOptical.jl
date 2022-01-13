@@ -69,7 +69,7 @@ module KTOptical
 
     function LG_E(l,p,x,y)
         R = √(x^2 + y^2)
-        Θ = atan(y/x)
+        Θ = atan(y,x)
         E = @. √(2 * factorial(p) / (π * factorial(p + abs(l)))) *
             (√2R / bp.ωz)^abs(l) *
             __Llp__(l, p, 2 * R^2 / bp.ωz^2) *
