@@ -56,6 +56,10 @@ module KTOptical
         global bp = struct_beamparam(ω_,z_,λ_,k,zr,ωz,Rz)
     end
 
+    function output()
+        return bp
+    end
+
     function __Llp__(l,p,u)
         function Llp_setinit(l,p,u,m)
             if m < 0 #再起関数の終了条件
